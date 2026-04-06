@@ -841,9 +841,20 @@ but will be documented in a future tutorial.</p>
 <p>If you’re reading this, I assume you like metal. I too like the taste of bare-metal projects,
 and the idea of running code on a microcontroller without the overhead of an operating system.
 But I also like the convenience of Linux, and the power of Python for data analysis.
-So why not have both? With the right hardware and software stack, you can develop your code in Python on Linux,
-then port it to run on a microcontroller with no operating system:</p>
-<img alt="Tera Term screenshot" class="align-center" src="https://media.githubusercontent.com/media/bonoadi/documentation/main/docs/learning/tools_for_ls/TeraTerm.png" />
+So why not have both? With the right hardware and software stack, you can develop your code in pure bare-metal C,
+with it fully functioning.</p>
+<p>To verify the proof of concept, The challenge was to fully port a high level IIO-based Python script
+to a no-OS C program running only from the microcontroller. Since the idea was if it can be done in an IIO Level
+It’s most certainly possible to do it in a bare-metal C program project. The script in question is the
+<a class="icon git reference external" href="https://github.com/analogdevicesinc/pyadi-iio/tree/main/examples/ad5592r_examples" target="_blank">AD5592r / AD5593r Curve Tracer Pyadi-IIO examples</a>. Note that not everything
+can be fully ported from the high-level script, but the core functionality of setting voltages, reading voltages,
+and using the devices all in all can be done in a fully embedded system. Additionally, the final script should contain the following:</p>
+<ul class="simple">
+<li><p>ASCII output of the results, such as printing to a console, or sending over UART, etc.</p></li>
+<li><p>Curve tracer data that can be used to plot using a spreadsheet tool like Excel, or LibreOffice.</p></li>
+<li><p>The same functionality as the original script, such as setting voltages, reading voltages, and using the devices all in all.</p></li>
+</ul>
+<img alt="Curve Tracer ASCII Output" class="align-center" src="https://media.githubusercontent.com/media/bonoadi/documentation/main/docs/learning/tools_for_ls/CurveTracerOutput.png" />
 <p>This photo highlights the ideal goal for this fully embedded system</p>
 <div class="admonition-todo admonition" id="id3">
 <p class="admonition-title">Todo</p>
