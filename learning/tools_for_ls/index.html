@@ -1074,23 +1074,27 @@ This is the beauty of no-OS, you can write your own code and use the existing dr
 <p>Once done reading you can now start trying to use the driver functions, such as the ones in the AD5592r driver, to write your own code.
 You can start by writing a simple code that sets the DAC voltage and reads it back using the ADC, then you can move on to more complex code such as the curve tracer example.
 Below are onboard connections that you can use to test your code, but feel free to make your own connections using the other GPIO pins as well!</p>
-<blockquote>
-<div><p><strong>Channel 0 -&gt; Channel 1 (DAC0 =&gt; ADC1), Channel 1 -&gt; Channel 2 (ADC1 =&gt; ADC-DAC2)</strong></p>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Channel</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="n">Channel</span> <span class="mi">1</span> <span class="p">(</span><span class="n">DAC0</span> <span class="o">=&gt;</span> <span class="n">ADC1</span><span class="p">),</span> <span class="n">Channel</span> <span class="mi">1</span> <span class="o">-&gt;</span> <span class="n">Channel</span> <span class="mi">2</span> <span class="p">(</span><span class="n">ADC1</span> <span class="o">=&gt;</span> <span class="n">ADC</span><span class="o">-</span><span class="n">DAC2</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Now to start development on a fully embedded system port, The number one rule of thumb in doing this is always cross referencing the drivers of the device that you will use and
 the original PyADI-IIO Script. In this case, the <a class="icon git reference external" href="https://github.com/analogdevicesinc/no-OS/tree/main/drivers/adc-dac/ad5592r" target="_blank">AD5592r driver</a> is the one you look around to use the base drivers rather than the IIO ones but
 a good practice also is to read the IIO drivers as it you can always assume it uses majority of the base drivers properly giving you more examples how how to use the function calls and wrappers of the base driver.
 Additionally, it’s important to know how drivers are structured in no-OS, as they are strctured with each having there own header file and main file. Sometimes the header file contains things such as conversion values,
 Parsing values, and important addresses for the device. Majority of the time the debugging process is just reading these files back and fourth checking whether you are using them properly, Once again, indicating that
 It’s important to see project examples on how they are used.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">int32_t</span> <span class="n">ad5592r_read_adc</span><span class="p">(</span><span class="n">struct</span> <span class="n">ad5592r_dev</span> <span class="o">*</span><span class="n">dev</span><span class="p">,</span> <span class="n">uint8_t</span> <span class="n">chan</span><span class="p">,</span> <span class="n">uint16_t</span> <span class="o">*</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>In our journey in porting this, if you have noticed that the abscence of printf statements in the code, this is because our microcontroller does not have a standard output, but rather
 only uses UART for communication, so we have to use the UART functions in no-OS API to send our data over UART and then read it on a terminal on our computer.
 The function below is our method of writing data to the terminal. You can read more about the function <a class="icon git reference external" href="https://github.com/analogdevicesinc/no-OS/tree/main/drivers/api/no_os_uart.c" target="_blank">here</a>. Additionally, if you tried this function
 immediately you will notice it will not work, that is because it does not catch up to the speed of the data being sent, so you have to add a delay after for your scripts which is also written below</p>
-<blockquote>
-<div><p><strong>no_os_uart_write(struct no_os_uart_desc *desc, const uint8_t *data, uint32_t bytes_number)</strong></p>
-<p><strong>no_os_delay(uint32_t delay_ms)</strong></p>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">no_os_uart_write</span><span class="p">(</span><span class="n">struct</span> <span class="n">no_os_uart_desc</span> <span class="o">*</span><span class="n">desc</span><span class="p">,</span> <span class="n">const</span> <span class="n">uint8_t</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">uint32_t</span> <span class="n">bytes_number</span><span class="p">)</span>
+
+<span class="n">no_os_delay</span><span class="p">(</span><span class="n">uint32_t</span> <span class="n">delay_ms</span><span class="p">)</span>
+</pre></div>
+</div>
 <div class="admonition-todo admonition" id="id3">
 <p class="admonition-title">Todo</p>
 <p>Show fully embedded projects and steps how to achieve them</p>
