@@ -377,9 +377,18 @@ Once done it should look something like this:
    :alt: ASCII Curve Tracer Output
    :align: center
 
+Below is the downloadable HEX File, you can read the source code in the no-OS repository for the project.
+
+
+.. ADMONITION:: Download HEX File
+
+   :download:`Fully embedded example <adalm-lsmspg_fixed_LED.hex>`
+
+
 .. todo::
 
    Show fully embedded projects and steps how to achieve them
+   
 
 More “Just Enough Software” examples
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
