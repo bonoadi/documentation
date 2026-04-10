@@ -300,9 +300,84 @@ immediately you will notice it will not work, that is because it does not catch 
 
    no_os_delay(uint32_t delay_ms)
 
-.. todo::
 
-   Show fully embedded projects and steps how to achieve them
+
+Now with all components figure out, we can now start writing our own import code from two different languages. The first thing that needs to be ported is the overall sequence of iterating to each different points, to 
+achieve 4 to 5 different curves. So in order to do that we must use nested for loops to iterate through the different point, per different point we will set the designated voltage per iteration creating 
+a sweeping effect. Here is the PyADI-IIO code for you to have an understanding how the **"sweeping"** works:
+
+::
+
+   for vb in range(499, 2500, 500):  # Sweep base voltage from 499 mV to 2.5V in 5 steps
+            Vbdrive.raw = vb / float(mV_per_lsb)  # Set base voltage
+            ib = ((Vbdrive.raw * mV_per_lsb / 1000) - Vbe) / Rbase  # Calculate base current
+            vcs = []  # Empty list for collector voltages
+            ics = []  # Empty list for collector currents
+            print("Base Drive: ", Vbdrive.raw * mV_per_lsb / 1000, " Volts, ", ib * 1e6, " uA") 
+            for vcv in range(0, 2500, 50):  # Sweep collector drive voltage from 0 to 2.5V in 50 mV steps
+                    print(Vcdrive_meas.raw, Vcdrive.raw, Vcsense.raw)
+                    Vcdrive.raw = vcv / float(mV_per_lsb)  # Set collector drive voltage
+                    ic = ((Vcdrive_meas.raw - Vcsense.raw) * mV_per_lsb / Rsense)  # Measure collector current
+                    vc = Vcsense.raw * mV_per_lsb / 1000.0  # Remember - actual collector voltage is
+                    vcs.append(vc)  # a bit less due to sense resistor 
+                    ics.append(ic)  # Add measurements to lists
+                    # print("coll voltage: ", vc, "  coll curre: ", ic)  # Print for fun  
+            curves.append([vcs, ics])  # vcs, ics, will be index 0, 1, respectively
+
+If you need hints on how to port this, note that all of the declaration of values such as "ic = Vcsense.raw * mV_per_lsb / 1000.0" are just function calls in the no-OS Driver, so once you 
+see these variable declaration you must use the function "ad5592r_write_dac()" for this to work, then for every variable that is called upon these values that is involved with components with the device,
+You must use "ad5592r_read_adc()" to read the value back and use it for calculations.
+
+
+After getting all of this ported out, you can now start the deliverables of the project, which is to print the curve tracer data in the terminal (no need for exporting to a seperate file yet) and copy the curve 
+tracer data to a spreadsheet to plot it. It's also appropriate to format it as a CSV or Comma Seperated Values for easy porting to a spreadsheet.
+
+
+.. image:: Spreadsheet_screenshot.png
+   :width: 700px
+   :height: 400px
+   :alt: Spreadsheet Screenshot for the Curve tracer data plotted
+   :align: center
+
+First deliverable done, now for the ASCII output, using the same array that stores all the data you could pretty much create a simple ASCII art that pretty much uses plotting logics to do this.
+We use arrays to store each different layers of the ASCII curve tracer art to print per row. Below is an example of how to do this in Python, but this is plausable in C as well but a little more tricky to do:
+
+::
+
+   def print_ascii_plot(curves, vcs_index, ics_index):
+    max_v = max(max(curve[vcs_index]) for curve in curves)
+    max_i = max(max(curve[ics_index]) for curve in curves)
+    scale_v = 50 / max_v  # Scale voltage to fit in 50 characters
+    scale_i = 20 / max_i  # Scale current to fit in 20 characters
+
+    plot = [[" " for _ in range(51)] for _ in range(21)]
+
+    for curve in curves:
+        for vc, ic in zip(curve[vcs_index], curve[ics_index]):
+            x = int(vc * scale_v)
+            y = int(ic * scale_i)
+            if 0 <= x < 51 and 0 <= y < 21:
+                plot[20 - y][x] = "*"
+
+    print("ASCII Curve Tracer Output:")
+    print("    " + "-" * 51)
+    for row in plot:
+        print("   |" + "".join(row) + "|")
+    print("    " + "-" * 51)
+    print("     " + " ".join(f"{i/10:.1f}" for i in range(0, 51, 10)))
+
+
+Once done it should look something like this: 
+
+.. image:: ASCIICurve.png
+   :width: 700px
+   :height: 400px
+   :alt: ASCII Curve Tracer Output
+   :align: center
+
+   .. todo::
+
+      Show fully embedded projects and steps how to achieve them
 
 More “Just Enough Software” examples
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
