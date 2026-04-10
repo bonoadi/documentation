@@ -382,7 +382,7 @@ Below is the downloadable HEX File, you can read the source code in the no-OS re
 
 .. ADMONITION:: Download HEX File
 
-   :download:`Fully embedded example <adalm-lsmspg_fixed_LED.hex>`
+   :download:`Fully embedded example <adalm-lsmspg_fixed_LED.zip>`
 
 
 .. todo::
