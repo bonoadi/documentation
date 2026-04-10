@@ -300,7 +300,9 @@ immediately you will notice it will not work, that is because it does not catch 
 
    no_os_delay(uint32_t delay_ms)
 
+.. todo::
 
+   Show fully embedded projects and steps how to achieve them
 
 Now with all components figure out, we can now start writing our own import code from two different languages. The first thing that needs to be ported is the overall sequence of iterating to each different points, to 
 achieve 4 to 5 different curves. So in order to do that we must use nested for loops to iterate through the different point, per different point we will set the designated voltage per iteration creating 
