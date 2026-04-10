@@ -377,9 +377,9 @@ Once done it should look something like this:
    :alt: ASCII Curve Tracer Output
    :align: center
 
-   .. todo::
+.. todo::
 
-      Show fully embedded projects and steps how to achieve them
+   Show fully embedded projects and steps how to achieve them
 
 More “Just Enough Software” examples
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
